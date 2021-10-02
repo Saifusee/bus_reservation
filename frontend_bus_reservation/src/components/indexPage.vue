@@ -1,7 +1,7 @@
 <template>
   <v-app id="inspire">
-
-
+  
+    <datatables-delete-modal></datatables-delete-modal>
     <sideMenu/>
     <mainContent/>
     
@@ -11,19 +11,16 @@
 <script>
 import sideMenu from './sideMenu'
 import mainContent from './mainContent'
+import datatablesDeleteModal from './miscComponent/datatablesDeleteModal.vue'
 
   export default {
     name: 'indexPage',
-    
+
     components:
     {
       'sideMenu': sideMenu,
       'mainContent': mainContent,
-    },
-
-    mounted() 
-    {
-      document.title = process.env.VUE_APP_SITE_HEADING;
+      'datatablesDeleteModal': datatablesDeleteModal,
     },
   }
 </script>

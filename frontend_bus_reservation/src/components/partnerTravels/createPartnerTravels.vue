@@ -334,7 +334,7 @@
         form: Object.assign({}, defaultForm),
         rules: {
           name: [val => !!val || 'This field is required'],
-          email: [val => /[a-zA-Z0-9._]+@[a-zA-Z]+\.[a-zA-Z]{2,3}/.test(val) || 'Invalid E-mail format',],
+          email: [val => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(val) || 'Invalid E-mail format',],
         },
         defaultForm,
         submitErrors: "",

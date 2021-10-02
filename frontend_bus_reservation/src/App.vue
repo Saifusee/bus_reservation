@@ -1,13 +1,13 @@
 <template>
-  <indexPage/>
+    <router-view></router-view>
 </template>
 <script>
-import indexPage from './components/indexPage'
 
 export default({
-  components: {
-    'indexPage': indexPage, 
-  },
+    mounted() 
+    {
+      document.title = process.env.VUE_APP_SITE_HEADING;
+    },
 })
 </script>
 

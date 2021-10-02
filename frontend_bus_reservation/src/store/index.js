@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import vuexCreatePartnerTravels from './modules/vuexCreatePartnerTravels'
+import vuexDeleteModal from './modules/vuexDeleteModal'
+
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    vuexCreatePartnerTravels,
+    vuexDeleteModal,
   }
 });

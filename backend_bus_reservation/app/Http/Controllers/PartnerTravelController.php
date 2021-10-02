@@ -4,13 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\PartnerTravel;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use App\Http\Requests\CreatePartnerTravelRequest;
 
 class PartnerTravelController extends Controller
 {
+    /**
+     * Show all resource in storage for particular user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function mainIndex(PartnerTravel $model, $user_id)
+    {
+        return response()->json(PartnerTravel::where('user_id', $user_id)->get(), 200);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -69,7 +78,7 @@ class PartnerTravelController extends Controller
 
 
 
-    public function index(PartnerTravel $model, Request $request)
+    public function showToTable(PartnerTravel $model, Request $request)
     {
         extract($request->only([ 'itemsPerPage', 'page', 'orderBy', 'orderType', 'user_id', 'searchQuery']));
 

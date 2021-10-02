@@ -19,4 +19,15 @@ class PickupPoint extends Model
     protected $fillable = [
         'pickup_point_address', 'user_id'
     ];
+
+    //Eloquent Relationships
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany('App\Ticket');
+    }
 }

@@ -15,8 +15,24 @@ class Ticket extends Model
      * @var array
      */
     protected $fillable = [
-        'from_location', 'to_location', 'booking_date', 'departure_date', 'passenger_name', 'passenger_contact_1',
+        'rc', 'from_location', 'to_location', 'booking_date', 'departure_date', 'passenger_name', 'passenger_contact_1',
         'passenger_contact_2', 'email', 'reporting_time', 'departure_time', 'sleeper_no', 'seat_no',
-        'bus_no', 'total_seats', 'amount', 'advance', 'user_id', 'pickup_point_id', 'partner_travel_id',
+        'bus_no', 'total_seats', 'amount', 'advance', 'is_cancel', 'user_id', 'pickup_point_id', 'partner_travel_id',
     ];
+
+    //Eloquent Relationships
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'user_id');
+    }
+
+    public function partner_travel()
+    {
+        return $this->belongsTo('App\PartnerTravel');
+    }
+
+    public function pickup_point()
+    {
+        return $this->belongsTo('App\PickupPoint');
+    }
 }

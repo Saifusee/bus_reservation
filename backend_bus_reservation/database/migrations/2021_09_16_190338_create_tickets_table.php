@@ -15,6 +15,7 @@ class CreateTicketsTable extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('rc')->unsigned()->nullable();
             $table->string('from_location');
             $table->string('to_location');
             $table->date('booking_date');
@@ -25,12 +26,13 @@ class CreateTicketsTable extends Migration
             $table->string('email')->nullable();
             $table->time('reporting_time');
             $table->time('departure_time');
-            $table->string('sleeper_no');
-            $table->string('seat_no');
+            $table->string('sleeper_no')->nullable();
+            $table->string('seat_no')->nullable();
             $table->integer('bus_no');
             $table->integer('total_seats');
             $table->integer('amount');
             $table->integer('advance');
+            $table->boolean('is_cancel')->default(false);
             $table->integer('balance')->default(0);
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('pickup_point_id')->unsigned();

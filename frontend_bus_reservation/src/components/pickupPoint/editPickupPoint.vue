@@ -1,0 +1,128 @@
+<template>
+    <v-card flat id="card-container">
+    <v-alert
+      border="top"
+      color="green lighten-2"
+      dark
+    >
+      <span style="text-align: center;"><h3>EDIT DETAILS <small>(Pickup Point)</small></h3></span>
+    </v-alert>
+      <v-progress-linear
+        :active=loading
+        indeterminate
+        height="10"
+        color="#0000cc"
+      ></v-progress-linear>
+    <v-form
+      ref="form"
+      @submit.prevent="submit"
+    >
+      <v-container fluid>
+            <v-container fluid>
+                <v-textarea
+                clearable
+                 v-model="form.pickup_point_address"
+                clear-icon="mdi-close-circle"
+                label="Enter Pickup Point Address"
+                counter="1000"
+                ></v-textarea>
+                <v-alert dense text outlined dismissible type="error" v-if="submitErrors.pickup_point_address">
+                  {{submitErrors.pickup_point_address[0]}}
+                </v-alert>
+            </v-container>
+      </v-container>
+
+      <v-card-actions>
+        <v-btn
+          :disabled="!formIsValid"
+          text
+          color="primary"
+          type="submit"
+        >
+          UPDATE
+        </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn
+          text
+          @click="resetForm"
+        >
+          CANCEL
+        </v-btn>
+      </v-card-actions>
+      <v-progress-linear
+        :active=loading
+        indeterminate
+        height="10"
+        color="#0000cc"
+      ></v-progress-linear>
+    </v-form>
+
+  </v-card>
+</template>
+
+<script>
+  export default {
+
+    created () {
+        this.axios.get(`pickup-points/${this.id}`)
+        .then( resp => {
+            this.form = resp.data
+        })
+    },
+
+    data () {
+      const defaultForm = Object.freeze({
+        pickup_point_address: '',
+      })
+
+      return {
+        form: Object.assign({}, defaultForm),
+        rules: {
+          name: [val => !!val || 'This field is required'],
+        },
+        defaultForm,
+        submitErrors: "",
+        loading: false,
+        id: this.$route.params.pickup_point_id
+      }
+    },
+
+    computed: {
+      formIsValid () {
+        return (
+          this.form.pickup_point_address
+        )
+      },
+    },
+
+    methods: {
+      resetForm () {
+        this.form = Object.assign({}, this.defaultForm)
+        this.$refs.form.reset()
+      },
+      submit () {
+        this.loading = true;
+        Object.assign(this.form, {
+          user_id: 1,
+          pickup_point_address: this.form.pickup_point_address.toUpperCase(),
+        });
+          this.axios.put(`pickup-points/${this.id}`, this.form)
+          .then(() => {
+            this.resetForm();
+            this.$router.replace({name: 'allPickupPoint'});
+          })
+          .catch(error => {
+            this.submitErrors = error.response.data.errors;
+            this.loading = false;
+            setTimeout(() => this.submitErrors = "", 30000);
+            this.resetForm();
+          })
+      },
+    },
+  }
+</script>
+<style scoped>
+#card-container {
+  width: 100%;
+}
+</style>

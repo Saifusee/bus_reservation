@@ -5,7 +5,13 @@
       color="green lighten-2"
       dark
     >
-      <span style="text-align: center;"><h3>CREATE TICKETS</h3></span>
+      <span style="text-align: center;"><h3>EDIT DETAILS <small>(Pickup Point)</small></h3></span>
+    </v-alert>
+    <v-alert
+      color="red lighten-2"
+      dark
+    >
+      <h4 style="text-align: center;">RC = {{rc}}</h4>
     </v-alert>
       <v-progress-linear
         :active=loading
@@ -271,7 +277,7 @@
           >
             <v-text-field
               clearable
-              v-model="form.passenger_email"
+              v-model="form.email"
               :rules="rules.email"
               color="teal"
               counter
@@ -283,7 +289,7 @@
                     </div>
                 </template>
             </v-text-field>
-            <v-alert dense text outlined dismissible type="error" v-if="submitErrors.passenger_email">
+            <v-alert dense text outlined dismissible type="error" v-if="submitErrors.email">
               {{submitErrors.passenger_email[0]}}
             </v-alert>
           </v-col>
@@ -400,7 +406,7 @@
         >
           <v-select
             v-model="selectPickupPointValue"
-            :items="pickup_point"
+            :items="pickup_point_address"
             item-text="pickup_point_address"
             item-value="id"
             :menu-props="{ maxHeight: '400' }"
@@ -422,7 +428,7 @@
           color="primary"
           type="submit"
         >
-          CREATE TICKET
+          UPDATE TICKET
         </v-btn>
         <v-spacer></v-spacer>
         <v-btn
@@ -465,8 +471,21 @@
           let object = {id: response.data[i].id, pickup_point_address: response.data[i].pickup_point_address};
           pickup_point_array.push(object);
         }
-        this.pickup_point = pickup_point_array;
+        this.pickup_point_address = pickup_point_array;
       })
+    },
+
+    created () {
+        this.axios.get(`tickets/${this.id}`)
+        .then( resp => {
+            this.form = resp.data
+            this.rc = resp.data.rc
+            this.selectPickupPointValue = resp.data.pickup_point_id
+            this.selectPartnerTravelValue = resp.data.partner_travel_id
+            this.reporting_time = resp.data.reporting_time
+            this.departure_time = resp.data.departure_time
+            this.departure_date = resp.data.departure_date
+        })
     },
 
     data (vm) {
@@ -477,7 +496,7 @@
         passenger_name: '',
         passenger_contact_1: '',
         passenger_contact_2: '',
-        passenger_email: '',
+        email: '',
         sleeper_no: '',
         seat_no: '',
         bus_no: '',
@@ -487,7 +506,7 @@
       })
 
       return {
-          form: Object.assign({}, defaultForm),
+        form: Object.assign({}, defaultForm),
         rules: {
           name: [val => !!val || 'This field is required'],
           intv: [
@@ -510,7 +529,9 @@
         selectPartnerTravelValue: '',
         partner_travel: [],
         selectPickupPointValue: '',
-        pickup_point: [],
+        pickup_point_address: [],
+        rc: '',
+        id: this.$route.params.ticket_id,
       }
     },
 
@@ -575,7 +596,7 @@
           seat_no: this.form.seat_no.toUpperCase(),
           partner_travel_id: this.selectPartnerTravelValue,
           pickup_point_id: this.selectPickupPointValue,
-          passenger_email: this.form.passenger_email.toLowerCase(),
+          email: this.form.email.toLowerCase(),
           booking_date: today_date,
           departure_date: this.departure_date,
           reporting_time: this.reporting_time,
@@ -584,7 +605,7 @@
           this.axios.post('tickets', this.form)
           .then(() => {
             this.resetForm();
-            // this.$router.replace({name: 'allTickets'});
+            this.$router.replace({name: 'allTicket'});
           })
           .catch(error => {
             this.submitErrors = error.response.data.errors;
